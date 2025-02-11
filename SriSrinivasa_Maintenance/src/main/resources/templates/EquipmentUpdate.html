@@ -1,0 +1,117 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/index.css" th:href="@{/css/RegisterStyles.css}" />
+</head>
+<body>
+<header>
+    <div class="logo">
+        <a th:href="@{/maintenance/}"><img th:src="@{/images/logo.png}"></a>
+        <h1>Sri Srinivasa Industries</h1>
+    </div>
+</header>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+<div class="container">
+    <form th:action="@{/maintenance/eqpmnt/update}" th:object="${equipment}" method="post">
+
+        <h2>Update Equipment</h2>
+        <h2>Equipment ID : <span th:text="${equipment.equipmentId}"></span> </h2>
+	 <input type="hidden" th:field="*{equipmentId}">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Name</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('name')}" th:text="${#fields.errors('name')}"></span>
+                <input type="text" id="name" th:field="*{name}" placeholder="Enter equipment name">
+            </div>
+            <div class="form-group">
+                <label for="manufacturer">Manufacturer</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('manufacturer')}" th:text="${#fields.errors('manufacturer')}"></span>
+                <input type="text" id="manufacturer" th:field="*{manufacturer}" placeholder="Enter manufacturer">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="modelNumber">Model Number</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('modelNumber')}" th:text="${#fields.errors('modelNumber')}"></span>
+                <input type="text" id="modelNumber" th:field="*{modelNumber}" placeholder="Enter model number">
+            </div>
+            <div class="form-group">
+                <label for="criticalityLevel">Criticality Level</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('criticalityLevel')}" th:text="${#fields.errors('criticalityLevel')}"></span>
+           		<select id="criticalityLevel" th:field="*{criticalityLevel}">
+	                <option value="">Select a Level</option>
+	                <option th:each="level : ${CriticalityLevelList}" th:value="${level}" th:text="${level}"></option>
+	            </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="operationalStatus">Operational Status</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('operationalStatus')}" th:text="${#fields.errors('operationalStatus')}"></span>
+            	<select id="operationalStatus" th:field="*{operationalStatus}">
+	                <option value="">Select a Status</option>
+	                <option th:each="status : ${OperationalStatusList}" th:value="${status}" th:text="${status}"></option>
+	            </select>
+            	
+            </div>
+            <div class="form-group">
+                <label for="maintenanceFrequency">Maintenance Frequency</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('maintenanceFrequency')}" th:text="${#fields.errors('maintenanceFrequency')}"></span>
+            	 <select id="maintenanceFrequency" th:field="*{maintenanceFrequency}">
+	                <option value="">Select a Maintenance</option>
+	                <option th:each="maintain : ${MaintenanceFrequencyList}" th:value="${maintain}" th:text="${maintain}"></option>
+	            </select>
+            </div>
+        </div>
+         <div class="form-row">
+            <div class="form-group">
+                <label for="dprt">Department </label> <span style="color:red" class="error" th:if="${#fields.hasErrors('department')}" th:text="${#fields.errors('department')}"></span>
+            	<select id="dprt" th:field="*{department}">
+	                <option value="">Select a Department</option>
+	                <option th:each="dprt : ${DepartmentList}" th:value="${dprt}" th:text="${dprt}"></option>
+	            </select>
+            	
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('category')}" th:text="${#fields.errors('category')}"></span>
+            	 <select id="category" th:field="*{category}">
+	                <option value="">Select a Category</option>
+	                <option th:each="category : ${CategoryList}" th:value="${category}" th:text="${category}"></option>
+	            </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="operatingHours">Operating Hours</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('operatingHours')}" th:text="${#fields.errors('operatingHours')}"></span>
+                <input type="number" id="operatingHours" th:field="*{operatingHours}" placeholder="Enter operating hours">
+            </div>
+            <div class="form-group">
+                <label for="cost">Cost</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('cost')}" th:text="${#fields.errors('cost')}"></span>
+                <input type="number" id="cost" th:field="*{cost}" placeholder="Enter equipment cost">
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="warrantyInformation">Warranty Information</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('warrantyInformation')}" th:text="${#fields.errors('warrantyInformation')}"></span>
+            <textarea id="warrantyInformation" th:field="*{warrantyInformation}" rows="4" placeholder="Enter warranty information"></textarea>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="notes">Notes</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('notes')}" th:text="${#fields.errors('notes')}"></span>
+            <textarea id="notes" th:field="*{notes}" rows="4" placeholder="Enter additional notes"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="location">Location</label> <span style="color:red" class="error" th:if="${#fields.hasErrors('location')}" th:text="${#fields.errors('location')}"></span>
+            <select id="location" th:field="*{location}">
+                <option value="">Select a location</option>
+                <option th:each="location : ${LocationsList}" th:value="${location}" th:text="${location}"></option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <button type="submit">Update Equipment</button>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Equipment List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #34495e;
+            padding: 8px;
+        }
+        th {
+            background-color: #34495e;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Top Bar Styles */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .filter-container {
+            display: flex;
+            gap: 10px;
+        }
+        .filter-container label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .filter-container input, .filter-container select, .filter-container button {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #34495e;
+        }
+        .filter-container button {
+            background-color: #1ABC9C;
+            color: white;
+            cursor: pointer;
+        }
+        .filter-container button:hover {
+            background-color: #16a085;
+        }
+
+        /* Multi-select Styles */
+        .multi-select {
+            width: 200px;
+            height: 100px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            background-color: #1ABC9C;
+            color: white;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #16a085;
+        }
+        .disabled {
+            pointer-events: none;
+            background-color: #ddd;
+        }
+
+        /* Download buttons */
+        .download-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .download-buttons a {
+            margin-left: 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+        }
+        .download-buttons a:hover {
+            background-color: #2980b9;
+        }
+        /* Custom HR Styles */
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="header"></div>
+<form th:action="@{/maintenance/eqpmnt/list}" method="get">
+<!-- Top Bar for Filtering and Searching -->
+<div class="top-bar">
+    <div class="filter-container">
+        <!-- Filter by Manufacturer -->
+        <div>
+            <label for="dprt">Department:</label>
+            <select name="dprt" id="dprt" th:value="${department}">
+                <option th:value="${department}" th:selected="${department}"><span th:text="${department}"></span></option>
+                <option value="">Any Department</option>
+                <option th:each="dept : ${DepartmentList}" th:value="${dept}" th:text="${dept}"></option>
+            </select>
+        </div>
+
+        <!-- Filter for Supplier -->
+        <div>
+            <label for="ctgry">Category:</label>
+            <select id="ctgry" name="ctgry" th:value="${category}">
+                <option th:value="${category}" th:selected="${category}"><span th:text="${category}"></span></option>
+                <option value="">Any category</option>
+                <option th:each="ctgry : ${CategoryList}"
+                        th:value="${ctgry}"
+                        th:text="${ctgry}"></option>
+            </select>
+        </div>
+        <!--  Filter for Location -->
+		<div>
+            <label for="lctn">Location:</label>
+            <select id="lctn" name="lctn" th:value="${location}">
+                <option th:value="${location}" th:selected="${location}"><span th:text="${location}"></span></option>
+                <option value="">Any Location</option>
+                <option th:each="lctn : ${LocationsList}"
+                        th:value="${lctn}"
+                        th:text="${lctn}">
+                        </option>
+            </select>
+        </div>
+		<!--  Filter for Criticality level -->
+		<div>
+            <label for="critical">Criticality Level:</label>
+            <select id="critical" name="crtcly" th:value="${criticalityLevel}">
+                <option th:value="${criticalityLevel}" th:selected="${criticalityLevel}"><span th:text="${criticalityLevel}"></span></option>
+                <option value="">Any level</option>
+                <option th:each="critical : ${CriticalityLevelList}"
+                        th:value="${critical}"
+                        th:text="${critical}"></option>
+            </select>
+        </div>
+        
+         <div>
+            <label for="operationalStatus">Operational Status:</label>
+            <select id="operationalStatus" name="oprSts" th:value="${operationalStatus}">
+                <option th:value="${operationalStatus}" th:selected="${operationalStatus}"><span th:text="${operationalStatus}"></span></option>
+                <option value="">Any status</option>
+                <option th:each="operationalStatus : ${OperationalStatusList}"
+                        th:value="${operationalStatus}"
+                        th:text="${operationalStatus}"></option>
+            </select>
+        </div>
+        
+         <div>
+            <label for="mntnc">Maintenance frequency:</label>
+            <select id="mntnc" name="mntncyFrcny" th:value="${maintenanceFrequency}">
+                <option th:value="${maintenanceFrequency}" th:selected="${maintenanceFrequency}"><span th:text="${maintenanceFrequency}"></span></option>
+                <option value="">Any frequency</option>
+                <option th:each="mntn : ${MaintenanceFrequencyList}"
+                        th:value="${mntn}"
+                        th:text="${mntn}"></option>
+            </select>
+        </div>
+ 
+        <!-- Submit Button -->
+        <button type="submit">Apply Filters</button>
+    </div>
+    
+</div>
+<span id="filter-message" style="color: red; display: none;">
+    *note: you can select 3 combinations at a time
+</span>
+
+<!-- Top Bar for Searching -->
+<div class="top-bar">
+    <div class="filter-container">
+ 
+ 
+ 		<div>
+            <label for="eqptId">Equipment Id:</label>
+            <input type="number" id="eqptId" name="eqptId" th:value="${equipmentId}"  placeholder="Enter equipment Id">
+        </div>
+        <!-- Search by Email -->
+        <div>
+            <label for="mnfctr">Manufacturer:</label>
+			 <select id="mnfctr" name="mnfctr" th:value="${manufacturer}">
+                <option value="">Any Manufacturer</option>
+                <option th:value="${manufacturer}" th:selected="${manufacturer}"><span th:text="${manufacturer}"></span></option>
+                <option th:each="mntnc : ${ManfacturersList}"
+                        th:value="${mntnc}"
+                        th:text="${mntnc}"></option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">Search</button>
+    </div>
+</div>
+</form>
+<h2 style="color: #16a085;text-align:center">Equipment List</h2>
+<span style="color: red;" th:text="${Filter}"></span>
+<!-- Employee Table -->
+<table>
+    <thead>
+        <tr>
+            <th style="color: white;">Equipment ID</th>
+            <th style="color: white;">Name</th>
+            <th style="color: white;">Manufacturer</th>
+            <th style="color: white;">Department</th>
+             <th style="color: white;">Category</th>
+            <th style="color: white;">OperationalStatus</th>
+             <th style="color: white;">CriticalityLevel</th>
+            <th style="color: white;">MaintenanceFrequency</th>
+             <th style="color: white;">location</th>
+             <th style="color: white;">VIEW</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="equipment : ${EquipmentList.content}">
+            <td th:text="${equipment.equipmentId}"></td>
+            <td th:text="${equipment.name}"></td>
+            <td><span th:text="${equipment.manufacturer}"></span></td>
+            <td th:text="${equipment.department}"></td>
+            <td th:text="${equipment.category}"></td>
+            <td th:text="${equipment.operationalStatus}"></td>
+            <td th:text="${equipment.criticalityLevel}"></td>
+            <td th:text="${equipment.maintenanceFrequency}"></td>
+            <td th:text="${equipment.location}"></td>
+            <td><a th:href="@{/maintenance/eqpmnt/eqpmntDetails/{id}(id=${equipment.equipmentId})}">View</a></td>  
+        </tr>
+    </tbody>
+</table>
+<div th:if="${!EquipmentList.hasContent()}">
+<h1 style="color: red;text-align:center">NO MACHINE FOUND</h1>
+</div>
+<div th:if="${EquipmentList.hasContent()}">
+<!-- Pagination Controls -->
+<div class="pagination">
+    <a th:href="@{/maintenance/eqpmnt/list(page=${EquipmentList.number - 1},mnfctr=${manufacturer},dprt=${department},ctgry=${category},lctn=${location},crtcly=${criticalityLevel},oprSts=${operationalStatus},mntncyFrcny=${maintenanceFrequency})}" th:classappend="${EquipmentList.first}? 'disabled' : ''">Previous</a>
+    <span>Page <span th:text="${EquipmentList.number + 1}"></span> of <span th:text="${EquipmentList.totalPages}"></span></span>
+    <a th:href="@{/maintenance/eqpmnt/list(page=${EquipmentList.number + 1},mnfctr=${manufacturer},dprt=${department},ctgry=${category},lctn=${location},crtcly=${criticalityLevel},oprSts=${operationalStatus},mntncyFrcny=${maintenanceFrequency})}" th:classappend="${EquipmentList.last}? 'disabled' : ''">Next</a>
+</div>
+</div>
+</body>
+<script>
+    // Get all filter select elements
+    const filters = document.querySelectorAll('.filter-container select');
+    const equipmentIdInput = document.getElementById('eqptId');
+    const manufacturerSelect = document.getElementById('mnfctr');
+
+    // Function to handle the filter selection logic
+    function handleFilterSelection() {
+        let selectedFiltersCount = 0;  // Counter to track selected filters
+
+        // Count how many filters are selected (excluding equipmentId and manufacturer)
+        filters.forEach(filter => {
+            if (filter.value !== "" && filter !== manufacturerSelect && filter !== equipmentIdInput) {
+                selectedFiltersCount++;
+            }
+        });
+
+        // If more than 3 filters are selected, disable all other unselected filters
+        filters.forEach(filter => {
+            if (selectedFiltersCount >= 3 && filter.value === "" && filter !== manufacturerSelect && filter !== equipmentIdInput) {
+                filter.disabled = true;  // Disable filter if 3 filters are already selected
+            } else {
+                filter.disabled = false; // Enable filter if less than 3 filters are selected
+            }
+        });
+
+        // If Equipment Id is entered, disable all other filters
+        if (equipmentIdInput.value !== "") {
+            filters.forEach(filter => {
+                if (filter !== equipmentIdInput) {
+                    filter.disabled = true;  // Disable all filters except Equipment Id
+                }
+            });
+        }
+
+        // If Manufacturer is selected, disable all other filters
+        if (manufacturerSelect.value !== "") {
+            filters.forEach(filter => {
+                if (filter !== manufacturerSelect) {
+                    filter.disabled = true;  // Disable all filters except Manufacturer
+                }
+            });
+        }
+
+        // If both Equipment Id and Manufacturer are entered, disable all filters
+        if (equipmentIdInput.value !== "" && manufacturerSelect.value !== "") {
+            filters.forEach(filter => {
+                if (filter !== equipmentIdInput && filter !== manufacturerSelect) {
+                    filter.disabled = true;  // Disable all filters except Equipment Id and Manufacturer
+                }
+            });
+        }
+
+        // If no Equipment Id and Manufacturer are entered, reset all filters to be enabled
+        if (equipmentIdInput.value === "" && manufacturerSelect.value === "") {
+            filters.forEach(filter => {
+                filter.disabled = false;
+            });
+        }
+
+        // Enforce the rule: Allow only up to 3 filters to be selected
+        let selectedFilters = 0;
+        filters.forEach(filter => {
+            if (filter.value !== "") {
+                selectedFilters++;
+            }
+        });
+
+        // If 3 filters are selected, disable the unselected filters
+        if (selectedFilters >= 3) {
+            filters.forEach(filter => {
+                if (filter.value === "") {
+                    filter.disabled = true;  // Disable unselected filters
+                }
+            });
+        } else {
+            filters.forEach(filter => {
+                filter.disabled = false;  // Enable all filters if less than 3 selected
+            });
+        }
+    }
+
+    // Attach event listener to each filter select element
+    filters.forEach(filter => {
+        filter.addEventListener('change', handleFilterSelection);
+    });
+
+    // Attach event listener to the Equipment Id input field
+    equipmentIdInput.addEventListener('input', handleFilterSelection);
+
+    // Attach event listener to the Manufacturer select field
+    manufacturerSelect.addEventListener('change', handleFilterSelection);
+
+    // Initialize by disabling filters when 3 are already selected
+    handleFilterSelection(); 
+</script>
+
+
+</html>

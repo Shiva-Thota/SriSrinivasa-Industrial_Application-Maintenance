@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Work Order</title>
+    <style>
+        /* General Reset */
+        * {
+        
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+
+        /* Body and Overall Layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header Styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #2C3E50;
+            color: white;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 170px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 120px;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        /* Container for the Form */
+        .container {
+            background-color: #2C3E50;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center-align the content */
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .form-group {
+            width: 48%;
+            margin-bottom: 15px;
+        }
+
+        .form-group.full-width {
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group select[multiple] {
+            height: auto;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .radio-group label {
+            margin-right: 10px;
+        }
+
+        #selected-roles {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #1ABC9C;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1ABC9C;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #16a085;
+        }
+
+        /* Link that looks like a button */
+        .edit-material-link {
+            background-color: transparent;
+            color: #1ABC9C;
+            text-decoration: underline;
+            border: none;
+            cursor: pointer;
+            margin-left: auto;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .edit-material-link:hover {
+            color: #16a085;
+        }
+
+        @media (max-width: 600px) {
+            .form-group {
+                width: 100%;
+            }
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            color: white;
+        }
+
+        table th {
+            background-color: #16a085;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            table th, table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="header"></div>
+<div class="main-content">
+    <div class="container">
+        <form th:action="@{/maintenance/mntnce/registerWorkOrder}" th:object="${workOrder}" method="post">
+            <h2>Work Order Details</h2>
+
+            <!-- Success and error messages -->
+            <h2 style="color: Green; text-align:center" th:text="${Success_Fully}"></h2>
+            <h2 style="color:red" th:text="${UN_Success}"></h2>
+ 
+			
+            <!-- Read-only fields (Details) -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="equipmentId">Equipment ID</label>
+                    <input type="text" id="equipmentId" th:field="*{equipmentId}" th:value="${workOrder.equipmentId}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="maintenanceType">Maintenance Type</label>
+                    <input type="text" id="maintenanceType" th:field="*{maintenanceType}" th:value="${workOrder.maintenanceType}" readonly>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="equipmentId">Equipment Name</label>
+                    <input type="text" id="equipmentId" th:field="*{equipmentName}" th:value="${workOrder.equipmentName}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="maintenanceType">status</label>
+                    <input type="text" id="maintenanceType" th:field="*{status}" th:value="${workOrder.status}" readonly>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Location</label>
+                    <input type="text" id="category" th:field="*{location}" th:value="${workOrder.location}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" th:field="*{department}" th:value="${workOrder.department}" readonly>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="maintenanceInformation">Maintenance Information</label>
+                <textarea id="maintenanceInformation" th:field="*{maintenanceInformation}" readonly th:value="${workOrder.maintenanceInformation}"></textarea>
+            </div>
+
+            <div th:if="${maintenanceType} == Corrective">
+                <div class="form-group full-width">
+                    <label for="failureReport">Failure Report</label>
+                    <textarea id="failureReport" th:field="*{failureReport}" rows="4" placeholder="Enter failure report"></textarea>
+                </div>
+            </div>
+
+            <!-- Editable fields (Inputs) -->
+            <h2>Task Information</h2>
+            <input type="text" th:field="*{maintenanceTaskId}" hidden="true">
+            <input type="text" th:field="*{breakDownId}" hidden="true">
+            <div class="form-row">
+               <div class="form-group">
+				    <label for="priorityLevel">Priority Level</label>
+				    <select id="priorityLevel" th:field="*{priorityLevel}">
+				        <option value="" disabled >Select priority level</option>
+				        <option th:value="${workOrder.priorityLevel}" th:selected="${workOrder.priorityLevel}"><span th:text="${workOrder.priorityLevel}"></span></option>
+				        <option value="Low">Low</option>
+				        <option value="Medium">Medium</option>
+				        <option value="High">High</option>
+				        <option value="Critical">Critical</option>
+				    </select>
+				</div>
+               <div class="form-group">
+			    <label for="impact">Impact</label>
+			    <select id="impact" th:field="*{impact}">
+			        <option value="" disabled selected>Select impact level</option>
+			        <option value="Low">Low</option>
+			        <option value="Medium">Medium</option>
+			        <option value="High">High</option>
+			        <option value="Critical">Critical</option>
+			    </select>
+			</div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="taskDescription">Task Description</label>
+                <textarea id="taskDescription" th:field="*{taskDescription}" rows="4" placeholder="Enter task description"></textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="specialInstructions">Special Instructions</label>
+                <textarea id="specialInstructions" th:field="*{specialInstructions}" rows="4" placeholder="Enter any special instructions"></textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="technician">Maintenance Team</label>
+               <select id="technician" th:field="*{maintenanceTeam}">
+               		 <option th:each="sprvsr : ${supervisorList}" 
+                        th:value="${sprvsr}" th:text="${sprvsr}" ></option>
+               </select>
+            </div>
+
+            <!-- Material Products -->
+            <h2>Material Products</h2>
+            <div th:if="${workOrder.materialRequired} != null">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>SKU</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product: ${workOrder.materialRequired}">
+                            <td th:text="${product.productId}"></td>
+                            <td th:text="${product.sku}"></td>
+                            <td th:text="${product.name}"></td>
+                            <td th:text="${product.category}"></td>
+                            <td th:text="${product.description}"></td>
+                            <td th:text="${product.quantityRequired}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div align="right">
+                <button type="submit" name="editMaterial" class="edit-material-link">Edit Material</button>
+            </div>
+            <div th:if="${workOrder.materialRequired == null or !#lists.isEmpty(workOrder.materialRequired)}">
+            	 <div th:if="${workOrder.maintenanceType} == Preventive">
+		           <div align="center"> 
+		                <div class="form-group">
+		                    <button type="submit" name="submitWorkOrder">Submit Work Order</button>
+		                </div>
+		            </div>
+            	</div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

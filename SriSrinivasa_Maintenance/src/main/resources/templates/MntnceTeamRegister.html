@@ -1,0 +1,91 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+    <link rel="stylesheet" type="text/css" media="all"
+     href="/css/index.css" th:href="@{/css/ProfileStyles.css}" /> 
+    <style>
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #2C3E50;
+    width: 500px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    color: white;
+    text-align: center;
+}
+
+select.form-group {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 5px;
+    background-color: #1ABC9C;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #16a085;
+}
+
+
+     </style>
+</head>
+<body>
+ <div th:replace="header"></div>
+   <div class="profile-container" style="background-color: #2C3E50; width:500px">
+    <!-- Profile Header -->
+    <h2 style="color:white;text-align:center">Team Creation</h2><br><br>
+	<h2 style="color: red;text-align:center" th:text="${Team_already_Exist}"></h2><br>
+    <form th:action="@{/maintenance/sprvsr/team/create}" method="post" >
+        <h2>Select Maintenance Supervisor</h2>
+        <br><br>
+         <select name="supervisorEmail" class="form-group" >
+                <option th:each="supervisor : ${supervisorList}" 
+                        th:value="${supervisor.key}" 
+                        th:text="${supervisor.key + ' - ' + supervisor.value}"></option>
+            </select>
+            <br><br>	
+            <div style="text-align:center">
+		         <div class="button-group">
+		            <button type="submit" style="color:white; background-color:#1ABC9C; padding:10px; border:none;">Create Team</button>
+		        </div>
+        	</div>
+    </form>
+</div>
+
+</body>
+</html>

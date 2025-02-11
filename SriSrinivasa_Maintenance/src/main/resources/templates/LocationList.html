@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Locations List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #34495e;
+            padding: 8px;
+        }
+        th {
+            background-color: #34495e;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+<div th:replace="header"></div>
+
+<h2 style="color: #16a085;text-align:center">Locations List</h2>
+
+<!-- Location Table -->
+<table>
+    <thead>
+        <tr>
+            <th style="color: white;">Location Name</th>
+            <th style="color: white;">Contact Person</th>
+            <th style="color: white;">Last Modified</th>
+            <th style="color: white;">Entry Date</th>
+         </tr>
+    </thead>
+    <tbody>
+        <tr th:each="location : ${Location_List}">
+            <td th:text="${location.locationName}"></td>
+            <td th:text="${location.contactPerson}"></td>
+            <td th:text="${location.modifyDate}"></td>
+            <td th:text="${location.entryDate}"></td>
+                   </tr>
+    </tbody>
+</table>
+
+
+
+</body>
+</html>

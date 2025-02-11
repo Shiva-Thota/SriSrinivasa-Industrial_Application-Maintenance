@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <script>
+        function updateSelectedProducts() {
+            const selectedProducts = [];
+            const selects = document.querySelectorAll('select[multiple]');
+            selects.forEach(select => {
+                const options = select.options;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].selected) {
+                        const productName = options[i].text.split(' - ')[0];  // Get only the product name
+                        selectedProducts.push(productName);
+                    }
+                }
+            });
+
+            const selectedProductsDiv = document.getElementById('selected-products');
+            selectedProductsDiv.innerHTML = '';  // Clear previous content
+            if (selectedProducts.length > 0) {
+                selectedProducts.forEach(product => {
+                    const productItem = document.createElement('li');
+                    productItem.textContent = product;  // Display only the product name
+                    selectedProductsDiv.appendChild(productItem);
+                });
+            } else {
+                selectedProductsDiv.innerHTML = '<li>No products selected</li>';
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        h3 {
+            color: white; 
+            font-size: 1rem; 
+        }
+
+        .container {
+            max-width: 90%; 
+            margin: auto;
+            padding: 20px;
+            background-color: #2C3E50;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        select {
+            flex: 1; 
+            min-height: 150px;
+            font-size: 1rem;
+            padding: 10px;
+        }
+
+        select option {
+            padding: 10px;
+        }
+
+        #selected-products li:hover {
+            background-color: #16a085;
+            color: white;
+            cursor: pointer;
+        }
+
+        #selected-products {
+            font-size: 1.2rem; 
+        }
+
+        .form-group.full-width {
+            text-align: center;
+        }
+
+        .form-group.full-width button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #16a085;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        /* Footer styles */
+        footer {
+            margin-top: 20px;
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Subtle note styling */
+        .note {
+            font-size: 0.9rem;
+            color: #e67e22; /* Orange note for better visibility */
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="header"></div>
+
+<div class="container">
+    
+    <h2 style="color: #16a085;text-align:center">Add Required Materials</h2>
+	
+	 <h2 style="color: Green;text-align:center" th:text="${NewProductRequest}"></h2>
+    <form method="post" th:action="@{/maintenance/mntnce/registerMaterialQuantityPage}">
+    
+     <input type="hidden" name="workOrderId" th:value="${workOrderId}"/> 
+     <input type="hidden" name="equipmemtId" th:value="${equipmemtId}"/>
+
+        <div th:each="category,iterStat : ${Products}" class="form-group mb-3">
+            <h3 th:text="${CategoryList[__${iterStat.index}__]}"></h3>
+            <select multiple class="form-control" name="selectedProducts" onchange="updateSelectedProducts()">
+                <option th:each="product : ${category}" 
+                        th:value="${product.key}" 
+                        th:text="${product.key + ' - ' + product.value}"></option>
+            </select>
+        </div>
+
+        <div class="form-group full-width mt-4">
+            <button type="submit" class="btn btn-primary">Save Selection</button>
+        </div>
+    </form>
+
+    <!-- Note and "Request for New Material" button -->
+    <div class="form-group full-width mt-2">
+        <p class="note">Note: If the material is not listed, you can request a new one below.</p>
+        <form method="get" th:action="@{/maintenance/mntnce/requestNewMaterialPage/{workOrderId}/{equipmemtId}(workOrderId=${workOrderId},equipmemtId=${equipmemtId})}">
+            <button type="submit" class="btn btn-secondary" style="background-color: #5a5a5a; color: white;">Request New Material</button>
+        </form>
+    </div>
+
+    <!-- Selected products display section -->
+    <div class="mt-4" style="color: white;">
+        <h4>Selected Products:</h4>
+        <ul id="selected-products" class="list-group">
+            <li>No products selected</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Footer for consistent spacing -->
+<footer>
+    <div class="footer">
+        <p>&copy; 2024 Sri Srinivasa Industries</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

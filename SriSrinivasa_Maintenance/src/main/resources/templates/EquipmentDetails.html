@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Equipment Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+       /* Overlay Styles */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* Dialog Box Styles */
+.dialog {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    width: 500px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.dialog input[type="text"], .dialog input[type="number"] {
+    width: 90%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 2px solid #34495e;
+    border-radius: 5px;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.dialog-buttons button {
+    padding: 10px 20px;
+    background-color: #1ABC9C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dialog-buttons button:hover {
+    background-color: #16a085;
+}
+
+    </style>
+</head>
+<body>
+    <div th:replace="header"></div>
+    <div class="container">
+        <h1>Equipment Details</h1>
+        <h1><span th:text="${MaterialNotFound}"></span></h1>
+
+        <!-- Equipment Information -->
+        <div class="form-group">
+            <h2>Basic Information</h2>
+            <p><strong>Equipment ID:</strong> <span th:text="${equipment.equipmentId}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${equipment.name}"></span></p>
+            <p><strong>Manufacturer:</strong> <span th:text="${equipment.manufacturer}"></span></p>
+            <p><strong>Model Number:</strong> <span th:text="${equipment.modelNumber}"></span></p>
+            <p><strong>Department:</strong> <span th:text="${equipment.department}"></span></p>
+            <p><strong>Category:</strong> <span th:text="${equipment.category}"></span></p>
+            <p><strong>Criticality Level:</strong> <span th:text="${equipment.criticalityLevel}"></span></p>
+            <p><strong>Operational Status:</strong> <span th:text="${equipment.operationalStatus}"></span></p>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="form-group">
+            <h2>Additional Information</h2>
+            <p><strong>Cost:</strong> <span th:text="${equipment.cost}"></span></p>
+            <p><strong>Location:</strong> <span th:text="${equipment.location}"></span></p>
+            <p><strong>Warranty Information:</strong> <span th:text="${equipment.warrantyInformation}"></span></p>
+            <p><strong>Notes:</strong> <span th:text="${equipment.notes}"></span></p>
+        </div>
+
+        <!-- Maintenance Information -->
+        <div class="form-group">
+            <h2>Maintenance Information</h2>
+            <p><strong>Maintenance Frequency:</strong> <span th:text="${equipment.maintenanceFrequency}"></span></p>
+            <p><strong>Maintenance Information:</strong> <span th:text="${equipment.maintenanceInformation}"></span></p>
+            <p><strong>Next Maintenance Date:</strong> <span th:text="${equipment.nextMaintenanceDate}"></span></p>
+        </div>
+        <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','MAINTENANCE_MANAGER')">
+        <a th:href="@{/maintenance/eqpmnt/update/{eqpmntId}(eqpmntId=${equipment.equipmentId})}" style="float: right;">update Equipment</a><br>
+      </div> 
+        <!-- Material Required for Equipment -->
+        <div class="form-group">
+            <h2>Maintenance Material Required</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Material ID</th>
+                        <th>SKU</th>
+                        <th>Name</th>
+                        <th>Product ID</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                    
+                        <th>Change Quantity</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="material : ${equipment.materialRequiredEquipment}">
+                        <td th:text="${material.materialId}"></td>
+                        <td th:text="${material.sku}"></td>
+                        <td th:text="${material.name}"></td>
+                        <td th:text="${material.productId}"></td>
+                        <td th:text="${material.category}"></td>
+                        <td th:text="${material.description}"></td>
+                        <td th:text="${material.quantityRequired}"></td>
+                        <td>
+                           <a href="javascript:void(0);" th:onclick="'showEditDialog(' + ${material.productId} + ', ' + ${equipment.equipmentId} + ')'" >Edit</a> </td><td>
+						   <a href="javascript:void(0);" th:onclick="'showRemoveDialog(' + ${material.productId} + ', ' + ${equipment.equipmentId} + ')'" >Remove</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+             <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','MAINTENANCE_MANAGER')">
+                    <a th:href="@{/maintenance/eqpmnt/addEqpmntMntncMatPage/{eqpmntId}(eqpmntId=${equipment.equipmentId})}" style="float: right;">add Material</a><br>
+            </div>
+        </div>
+
+<div class="dialog" id="editDialog">
+    <form action="/maintenance/eqpmnt/editEqpmntMntnceMatQty" method="post">
+        <h3>Edit Material Quantity</h3>
+        <p>Equipment ID: <span id="popupEditEquipmentId"></span></p>
+        <p>Product ID: <span id="popupEditMaterialId"></span></p>
+        <input type="hidden" id="editEquipmentId" name="eqpmntId">
+        <input type="hidden" id="editMaterialId" name="prdctId">
+        <input type="number" name="quantity" placeholder="Enter new quantity">
+        <div class="dialog-buttons">
+            <button type="button" onclick="closeDialog()">Cancel</button>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<!-- Remove Dialog -->
+<div class="dialog" id="removeDialog">
+    <form action="/maintenance/eqpmnt/removeEqpmntMntnceMat" method="post">
+        <h3>Confirm Removal</h3>
+        <p>Are you sure you want to remove this material?</p>
+        <input type="hidden" id="removeEquipmentId" name="eqpmntId">
+        <input type="hidden" id="removeMaterialId" name="prdctId">
+        <div class="dialog-buttons">
+            <button type="button" onclick="closeDialog()">Cancel</button>
+            <button type="submit">Confirm</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function showEditDialog(materialId, equipmentId) {
+        // Set the IDs in the popup fields and display text
+        document.getElementById('popupEditMaterialId').innerText = materialId;
+        document.getElementById('popupEditEquipmentId').innerText = equipmentId;
+        document.getElementById('editMaterialId').value = materialId;
+        document.getElementById('editEquipmentId').value = equipmentId;
+
+        // Show the edit dialog
+        document.getElementById('editDialog').style.display = 'block';
+    }
+
+    function showRemoveDialog(materialId, equipmentId) {
+        // Set the IDs in the hidden fields
+        document.getElementById('removeMaterialId').value = materialId;
+        document.getElementById('removeEquipmentId').value = equipmentId;
+
+        // Show the remove dialog
+        document.getElementById('removeDialog').style.display = 'block';
+    }
+
+    function closeDialog() {
+        // Close both dialogs and clear overlay
+        document.getElementById('editDialog').style.display = 'none';
+        document.getElementById('removeDialog').style.display = 'none';
+    }
+</script>
+</body>
+</html>

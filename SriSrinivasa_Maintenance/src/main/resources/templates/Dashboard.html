@@ -1,0 +1,88 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Dashboard</title>
+    <link rel="stylesheet" type="text/css" media="all"
+     href="/css/index.css" th:href="@{/css/Dashboard.css}" />  
+    
+</head>
+<body>
+<div th:replace="header"></div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Maintenance Dashboard</h1>
+        </header>
+
+        <!-- Sidebar -->
+         <nav class="sidebar">
+            <ul>
+                <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','HUMAN_RESOURCE')">
+                    <li><a href="/employee/Dashboard/"  >Employee Dashboard</a></li>
+                </div>
+                <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','PRODUCTION_MANAGER','PRODUCTION_SUPERVISOR')">
+                    <li><a href="/prdctn/"  >Production</a></li>
+                </div>
+                <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','MAINTENANCE_MANAGER','MAINTENANCE_SUPERVISOR')">
+                    <li><a href="/maintenance/"  >Maintenance</a></li>
+                </div>
+                <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','INVENTORY_MANAGER','WAREHOUSE_SUPERVISOR')">
+                    <li><a href="/invntry/"  >Inventory</a></li>
+                </div>
+                
+            </ul>
+        </nav>
+        
+        <main>       
+            <section id="production" class="section">
+                <h2>Maintenance Overview</h2>
+                <div class="card-container">
+                    <div class="card">
+                        <h3>Equipment Dashboard</h3>
+                        <p>Equipment catalog </p><br>
+                        <a th:href="@{/maintenance/equipmentDashboard}" class="button-link">View</a>
+                    </div>
+                    <div class="card">
+                        <h3>Maintenance Dashboard</h3>
+                        <p>Maintenance</p><br>
+                        <a th:href="@{/maintenance/maintenanceDashboard}" class="button-link">View</a>
+                    </div>
+
+                    <div class="card">
+                     	<h3>Register BreakDown</h3>
+                        <p>Register New BreakDown</p><br> 
+                        <a th:href="@{/maintenance/mntnce/breakdown}" class="button-link" >Register</a>
+                    </div>
+                   
+                    <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','MAINTENANCE_MANAGER')">
+                     <div class="card-container">
+                    <div class="card">
+                        <h3>Maintenance Teams</h3> 
+                        <p>List of Maintenance Teams</p><br>
+                        <a th:href="@{/maintenance/sprvsr/team/all}" class="button-link">View Details</a><br>
+                    </div>
+                    
+                     <div class="card">
+                     	<h3>New Products approval List</h3>
+                        <p>Register New BreakDown</p><br> 
+                        <a th:href="@{/maintenance/mntnce/newProductReqList}" class="button-link" >View List</a>
+                    </div>
+                    <div class="card">
+                     	<h3>Employees List</h3>
+                        <p>Register New BreakDown</p><br> 
+                        <a th:href="@{/maintenance/sprvsr/empList}" class="button-link" >View List</a>
+                    </div>
+                    </div>
+                     </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Sri Srinivasa Industries - All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

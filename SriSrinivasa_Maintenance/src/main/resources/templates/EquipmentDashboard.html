@@ -1,0 +1,89 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="layouts/default"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Dashboard</title>
+	 <link rel="stylesheet" type="text/css" media="all"
+     href="/css/index.css" th:href="@{/css/Dashboard.css}" />  
+     <style>
+      .card {
+            background: #34495e;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 250px;
+             color: white;
+        }
+     </style>
+</head>
+<body>     
+<div th:replace="header"></div>
+
+
+ 	<section id="overview" class="section"><br><br>
+                <h2 style="text-align:center;color:#16a085">Equipment dashboard</h2><br><br>
+                
+                 	 <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','MAINTENANCE_MANAGER')">
+                 	 <div class="card-container">
+                    <div class="card">
+                     	<h3>Add Equipment</h3><br>
+                        <p>Add new Equipment </p><br>
+                        <a th:href="@{/maintenance/eqpmnt/addEquipment}" class="button-link" >Add Equipment</a>
+                    </div>
+                     <div class="card">
+                    	<h3>Add Bulk Equipment</h3><br>
+						 <p>Add Bulk Equipment from Excel</p><br>
+                        <a th:href="@{/maintenance/eqpmnt/addBulkEqpmnts}" class="button-link" >Add Bulk Equipment</a>
+                    </div> 
+                    <div class="card">
+                    	<h3>Equipment List</h3><br>
+						 <p>All Equipment</p><br>
+                        <a th:href="@{/maintenance/eqpmnt/list}" class="button-link" >Equipment List</a>
+                    </div> 
+                     
+                    </div> 
+                    </div> 
+                    <div sec:authorize="hasAnyAuthority('MAINTENANCE_SUPERVISOR')">
+                 	 <div class="card-container">
+                   
+                    <div class="card">
+                    	<h3>Equipment List</h3><br>
+						 <p>All Equipment</p><br>
+                        <a th:href="@{/maintenance/eqpmnt/list}" class="button-link" >Equipment List</a>
+       					  					 
+                    </div>  
+                    </div>  
+                </div>
+          
+                </section>
+                
+                
+                <section id="overview" class="section"><br><br>
+                
+                 	 <div sec:authorize="hasAnyAuthority('GENERAL_MANAGER','MAINTENANCE_MANAGER')">
+                   <h2 style="text-align:center;color:#16a085">Location dashboard</h2><br><br>
+                 	 
+                 	 <div class="card-container">
+                    <div class="card">
+                     	<h3>Add Location</h3><br>
+                        <p>Add new Location</p><br>
+                        <a th:href="@{/maintenance/eqpmnt/location}" class="button-link" >Add Location</a>
+                    </div>
+                    <div class="card">
+                    	<h3>Location List</h3><br>
+						 <p>All Locations</p><br>
+                        <a th:href="@{/maintenance/eqpmnt/locationList}" class="button-link" >Location List</a>
+                    </div>  
+                    </div> 
+                    </div> 
+                  </section>
+                
+                
+                
+                </body>
+</html>

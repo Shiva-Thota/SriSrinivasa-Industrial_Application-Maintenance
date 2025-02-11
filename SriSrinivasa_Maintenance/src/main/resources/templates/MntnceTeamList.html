@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Production Team List</title>
+    <style>
+        /* General Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #34495e;
+            padding: 8px;
+        }
+        th {
+            background-color: #34495e;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Top Bar Styles */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .filter-container {
+            display: flex;
+            gap: 20px;
+        }
+        .filter-container label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .filter-container input, .filter-container select, .filter-container button {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #34495e;
+        }
+        .filter-container button {
+            background-color: #1ABC9C;
+            color: white;
+            cursor: pointer;
+        }
+        .filter-container button:hover {
+            background-color: #16a085;
+        }
+
+        /* Multi-select Styles */
+        .multi-select {
+            width: 200px;
+            height: 100px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            background-color: #1ABC9C;
+            color: white;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #16a085;
+        }
+        .disabled {
+            pointer-events: none;
+            background-color: #ddd;
+        }
+
+        /* Download buttons */
+        .download-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .download-buttons a {
+            margin-left: 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+        }
+        .download-buttons a:hover {
+            background-color: #2980b9;
+        }
+        
+         .button-link {
+		     padding: 10px 20px;             /* Adds space inside the button */
+		    margin: 5px;                    /* Adds space around the button */
+		    font-size: 16px;                /* Font size of the button text */
+		    color: white;     
+		    text-decoration: none;                  /* Text color */
+		     background-color: #1ABC9C;     /* Background color */
+		    border-radius: 5px;            /* Rounded corners */
+		    cursor: pointer;                /* Changes cursor to pointer on hover */
+		}
+		
+		.button-link:hover {
+		        background-color: #16a085;     /* Darker blue on hover */
+		}
+    </style>
+</head>
+<body>
+
+<div th:replace="header"></div>
+
+<h2 style="color: #16a085;text-align:center">Maintenance Team List</h2>
+
+<table>
+    <thead>
+          <tr>            
+             <th style="color: white;">Team Supervisor</th>
+             <th style="color: white;">Status</th>
+             <th style="color: white;">Manager</th>
+             <th style="color: white;">Current Order Id</th>
+             <th style="color: white;">No of Members</th>
+             <th style="color: white;">view</th>
+         </tr>
+    </thead>
+    <tbody>
+        <tr th:each="team : ${maintenanceTeam}">
+            <td th:text="${team.supervisor}"></td>
+            <td th:text="${team.status}"></td>
+            <td th:text="${team.manager}"></td>
+            <td >
+           		 <div th:each="id : ${team.WorkOrderIds}">
+            		<span th:text="${id}"></span>
+            	</div>
+            </td>
+            <td th:text="${team.status}"></td>
+         	<td>
+<!-- 	         	<form th:action="@{/prdctn/sprvsr/viewTeam}"  method="post"> -->
+<!-- 	         		<input type="text" name="superviser" th:value="${team.superviser}" hidden=true> -->
+<!-- 	         		<button>View</button> -->
+<!-- 	         	</form>  -->
+	         	<a th:href="@{/maintenance/sprvsr/viewTeam/{supervisor}(supervisor=${team.supervisor})}">view</a>
+         	</td>
+       </tr>
+    </tbody>
+</table>   
+
+       <a th:href="@{/maintenance/sprvsr/team/create}"  style="float: right;">create Team</a><br>
+
+</body>
+</html>
